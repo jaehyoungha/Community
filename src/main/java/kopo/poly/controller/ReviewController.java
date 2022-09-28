@@ -1,7 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.ReviewDTO;
-import kopo.poly.service.ICommunityService;
+import kopo.poly.service.IReviewService;
 import kopo.poly.util.CmmUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,33 +19,34 @@ import java.util.List;
 @Controller
 public class ReviewController {
 
-    @Resource (name = "CommunityService")
-    private ICommunityService communityService;
+    @Resource (name = "ReviewService")
+    private IReviewService reviewService;
 
-    @GetMapping(value = "noticeList")
-    public String noticeList(ModelMap model) {
+    @GetMapping(value = "main")
+    public String mainPage() {
+        log.info(this.getClass().getName()+ ".mainPage Start!!");
+        log.info(this.getClass().getName()+ ".mainPage End!!");
+        return "/main";
+    }
+    @GetMapping(value = "reviewList")
+    public String reivewList(ModelMap model) {
 
-        // 로그 찍기(추후 찍은 로그를 통해 이 함수에 접근했는지 파악하기 용이하다.)
         log.info(this.getClass().getName() + ".reviewList start!");
 
-        // 공지사항 리스트 가져오기
-        List<ReviewDTO> rList = communityService.getReviewList();
+        // 리뷰 리스트 가져오기
+        List<ReviewDTO> rList = reviewService.getReviewList();
 
         if (rList == null) {
             rList = new ArrayList<ReviewDTO>();
 
         }
 
-        // 조회된 리스트 결과값 넣어주기
+        // 조회된 리스트 넣어주기
         model.addAttribute("rList", rList);
 
-        // 변수 초기화(메모리 효율화 시키기 위해 사용함)
         rList = null;
-
-        // 로그 찍기(추후 찍은 로그를 통해 이 함수 호출이 끝났는지 파악하기 용이하다.)
         log.info(this.getClass().getName() + ".review end!");
 
-        // 함수 처리가 끝나고 보여줄 JSP 파일명(/WEB-INF/view/notice/NoticeList.jsp)
         return "/reviewList";
     }
 
@@ -77,7 +78,7 @@ public class ReviewController {
         rDTO.setReviewSeq(Long.parseLong(rSeq));
 
         // 공지사항 상세정보 가져오기
-        ReviewDTO eDTO = communityService.getReviewInfo(rDTO, true);
+        ReviewDTO eDTO = reviewService.getReviewInfo(rDTO, true);
 
         if (eDTO == null) {
             eDTO = new ReviewDTO();
@@ -110,7 +111,7 @@ public class ReviewController {
 
             rDTO.setReviewSeq(Long.parseLong(rSeq));
 
-            ReviewDTO eDTO = communityService.getReviewInfo(rDTO, false);
+            ReviewDTO eDTO = reviewService.getReviewInfo(rDTO, false);
 
             if (eDTO == null) {
                 eDTO = new ReviewDTO();
@@ -162,7 +163,7 @@ public class ReviewController {
             eDTO.setContents(rDTO.getContents());
 
             // 게시글 수정하기 DB
-            communityService.updatereviewInfo(eDTO);
+            reviewService.updatereviewInfo(eDTO);
 
             msg = "수정되었습니다.";
 
@@ -203,7 +204,7 @@ public class ReviewController {
             pDTO.setReviewSeq(Long.parseLong(rSeq));
 
             // 게시글 삭제하기 DB
-            communityService.deletereviewInfo(pDTO);
+            reviewService.deletereviewInfo(pDTO);
 
             msg = "삭제되었습니다.";
 
@@ -231,7 +232,7 @@ public class ReviewController {
      * <p>
      * GetMapping(value = "notice/NoticeReg") =>  GET방식을 통해 접속되는 URL이 notice/NoticeReg인 경우 아래 함수를 실행함
      */
-    @GetMapping(value = "reivewReg")
+    @GetMapping(value = "reviewReg")
     public String reviewReg() {
 
         log.info(this.getClass().getName() + ".reviewReg Start!");
@@ -255,27 +256,27 @@ public class ReviewController {
             /*
              * 게시판 글 등록되기 위해 사용되는 form객체의 하위 input 객체 등을 받아오기 위해 사용함
              */
-            String userid = CmmUtil.nvl((String) session.getAttribute("SESSION_USERID"));
+//            String userid = CmmUtil.nvl((String) session.getAttribute("SESSION_USERID"));
 
             /*
              * ####################################################################################
              * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
              * ####################################################################################
              */
-            log.info("user_id : " + rDTO.getUserId());
             log.info("title : " + rDTO.getTitle());
             log.info("contents : " + rDTO.getContents());
-
+            //TODO 나중에 게이트웨이 만들면 삭제
+            session.setAttribute("userId","ha");
             ReviewDTO eDTO = new ReviewDTO();
 
-            eDTO.setUserId(rDTO.getUserId());
+            eDTO.setUserId((String) session.getAttribute("userId"));
             eDTO.setTitle(rDTO.getTitle());
             eDTO.setContents(rDTO.getContents());
 
             /*
              * 게시글 등록하기위한 비즈니스 로직을 호출
              */
-            communityService.InsertreviewInfo(eDTO);
+            reviewService.InsertreviewInfo(eDTO);
 
             // 저장이 완료되면 사용자에게 보여줄 메시지
             msg = "등록되었습니다.";

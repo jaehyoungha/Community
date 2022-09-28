@@ -2,13 +2,12 @@ package kopo.poly.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Getter
 @Setter
-public class CommunityDTO {
+public class ReviewDTO {
 
-    private long noticeSeq; // 시퀀스
+    private long reviewSeq; // 시퀀스
     private String title; //제목
     private String contents; //글 내용
     private String userId; //작성자
