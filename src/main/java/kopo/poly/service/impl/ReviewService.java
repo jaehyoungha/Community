@@ -123,8 +123,6 @@ public class ReviewService implements IReviewService {
         log.info("contents : " + contents);
 //        log.info("userId : " + userId);
 
-        // 공지사항 저장을 위해서는 PK 값은 빌더에 추가하지 않는다.
-        // JPA에 자동 증가 설정을 해놨음
         ReviewEntity rEntity = ReviewEntity.builder()
                 .title(title).userId(eDTO.getUserId()).contents(contents).readCnt(0L)
                 .regDt(DateUtil.getDateTime("yyyy-MM-dd hh:mm:ss"))

@@ -22,6 +22,10 @@ public class ReviewController {
     @Resource (name = "ReviewService")
     private IReviewService reviewService;
 
+    private String alt_title = "";
+    private String alt_state = "";
+    private String msg = "";
+    private String url = "";
     @GetMapping(value = "main")
     public String mainPage() {
         log.info(this.getClass().getName()+ ".mainPage Start!!");
@@ -50,56 +54,10 @@ public class ReviewController {
         return "/reviewList";
     }
 
-
-    /**
-     * 게시판 상세보기
-     */
-    @GetMapping(value = "reviewInfo")
-    public String reviewInfo(HttpServletRequest request, ModelMap model) throws Exception {
-
-        log.info(this.getClass().getName() + ".reviewInfo Start!");
-
-        /*
-         * 게시판 글 등록되기 위해 사용되는 form객체의 하위 input 객체 등을 받아오기 위해 사용함
-         */
-        String rSeq = CmmUtil.nvl(request.getParameter("reviewSeq")); // 공지글번호(PK)
-
-        /*
-         * ####################################################################################
-         * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
-         * ####################################################################################
-         */
-        log.info("rSeq : " + rSeq);
-
-        /*
-         * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
-         */
-        ReviewDTO rDTO = new ReviewDTO();
-        rDTO.setReviewSeq(Long.parseLong(rSeq));
-
-        // 공지사항 상세정보 가져오기
-        ReviewDTO eDTO = reviewService.getReviewInfo(rDTO, true);
-
-        if (eDTO == null) {
-            eDTO = new ReviewDTO();
-
-        }
-
-        // 조회된 리스트 결과값 넣어주기
-        model.addAttribute("eDTO", eDTO);
-
-
-        log.info(this.getClass().getName() + ".reviewInfo End!");
-
-        return "/reviewInfo";
-    }
-
     @GetMapping(value = "reviewEditInfo")
     public String noticeEditInfo(HttpServletRequest request, ModelMap model) {
 
         log.info(this.getClass().getName() + ".reviewEditInfo Start!");
-
-        String msg = "";
 
         try {
 
@@ -180,7 +138,7 @@ public class ReviewController {
 
         }
 
-        return "/MsgToList";
+        return "/sweetalert";
     }
 
     /**
@@ -221,17 +179,8 @@ public class ReviewController {
 
         }
 
-        return "/MsgToList";
+        return "/sweetalert";
     }
-
-    /**
-     * 게시판 작성 페이지 이동
-     * <p>
-     * 이 함수는 게시판 작성 페이지로 접근하기 위해 만듬. WEB-INF 밑에 존재하는 JSP는 직접 호출할 수 없음 따라서 WEB-INF 밑에
-     * 존재하는 JSP를 호출하기 위해서는 반드시 Controller 등록해야함
-     * <p>
-     * GetMapping(value = "notice/NoticeReg") =>  GET방식을 통해 접속되는 URL이 notice/NoticeReg인 경우 아래 함수를 실행함
-     */
     @GetMapping(value = "reviewReg")
     public String reviewReg() {
 
@@ -242,27 +191,14 @@ public class ReviewController {
         return "/reviewReg";
     }
 
-    /**
-     * 게시판 글 등록
-     */
     @PostMapping(value = "reviewInsert")
-    public String reviewInsert(HttpSession session, ReviewDTO rDTO, ModelMap model) {
+    public String reviewInsert(HttpSession session, ReviewDTO rDTO, ModelMap model) { //리뷰 등록
 
         log.info(this.getClass().getName() + ".reviewInsert Start!");
 
-        String msg = "";
-
         try {
-            /*
-             * 게시판 글 등록되기 위해 사용되는 form객체의 하위 input 객체 등을 받아오기 위해 사용함
-             */
 //            String userid = CmmUtil.nvl((String) session.getAttribute("SESSION_USERID"));
 
-            /*
-             * ####################################################################################
-             * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
-             * ####################################################################################
-             */
             log.info("title : " + rDTO.getTitle());
             log.info("contents : " + rDTO.getContents());
             //TODO 나중에 게이트웨이 만들면 삭제
@@ -273,30 +209,28 @@ public class ReviewController {
             eDTO.setTitle(rDTO.getTitle());
             eDTO.setContents(rDTO.getContents());
 
-            /*
-             * 게시글 등록하기위한 비즈니스 로직을 호출
-             */
+
             reviewService.InsertreviewInfo(eDTO);
-
-            // 저장이 완료되면 사용자에게 보여줄 메시지
-            msg = "등록되었습니다.";
-
+            alt_title = "리뷰 작성";
+            msg = "리뷰등록 성공";
+            alt_state = "success";
+            url = "/reviewList";
 
         } catch (Exception e) {
-
-            // 저장이 실패되면 사용자에게 보여줄 메시지
-            msg = "실패하였습니다. : " + e.getMessage();
-            log.info(e.toString());
-            e.printStackTrace();
+            alt_title = "리뷰 작성";
+            msg = "리뷰등록 실패";
+            alt_state = "fail";
+            url = "/reviewReg";
 
         } finally {
             log.info(this.getClass().getName() + ".reviewInsert End!");
 
-            // 결과 메시지 전달하기
+            model.addAttribute("alt_title", alt_title);
+            model.addAttribute("alt_state", alt_state);
             model.addAttribute("msg", msg);
-
+            model.addAttribute("url", url);
         }
 
-        return "/MsgToList";
+        return "/sweetalert";
     }
 }
