@@ -164,10 +164,10 @@ public class ReviewController {
             // 게시글 삭제하기 DB
             reviewService.deletereviewInfo(pDTO);
 
-            msg = "삭제되었습니다.";
+            msg = "삭제되었습니다";
 
         } catch (Exception e) {
-            msg = "실패하였습니다. : " + e.getMessage();
+            msg = "실패하였습니다 : " + e.getMessage();
             log.info(e.toString());
             e.printStackTrace();
 
