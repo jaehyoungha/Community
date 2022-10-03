@@ -123,7 +123,7 @@ public class ReviewController {
             // 게시글 수정하기 DB
             reviewService.updatereviewInfo(eDTO);
 
-            msg = "수정되었습니다.";
+            msg = "수정되었습니다";
 
         } catch (Exception e) {
             msg = "실패하였습니다. : " + e.getMessage();
