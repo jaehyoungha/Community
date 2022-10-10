@@ -20,7 +20,7 @@ import java.util.List;
 public class ReviewController {
 
     @Resource (name = "ReviewService")
-    private IReviewService reviewService;
+    private  IReviewService reviewService;
 
     private String alt_title = "";
     private String alt_state = "";
@@ -51,7 +51,7 @@ public class ReviewController {
         rList = null;
         log.info(this.getClass().getName() + ".review end!");
 
-        return "/reviewList";
+        return "/review/reviewList";
     }
 
     @GetMapping(value = "reviewEditInfo")
@@ -93,7 +93,7 @@ public class ReviewController {
 
         log.info(this.getClass().getName() + ".noticeEditInfo end!");
 
-        return "/reviewEditInfo";
+        return "/review/reviewEditInfo";
     }
 
     /**
@@ -188,7 +188,7 @@ public class ReviewController {
 
         log.info(this.getClass().getName() + ".reviewReg End!");
 
-        return "/reviewReg";
+        return "/review/reviewReg";
     }
 
     @PostMapping(value = "reviewInsert")
@@ -214,13 +214,13 @@ public class ReviewController {
             alt_title = "리뷰 작성";
             msg = "리뷰등록 성공";
             alt_state = "success";
-            url = "/reviewList";
+            url = "reviewList";
 
         } catch (Exception e) {
             alt_title = "리뷰 작성";
             msg = "리뷰등록 실패";
             alt_state = "fail";
-            url = "/reviewReg";
+            url = "reviewReg";
 
         } finally {
             log.info(this.getClass().getName() + ".reviewInsert End!");
