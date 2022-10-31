@@ -1,4 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="kopo.poly.util.CmmUtil" %>
+<%@ page import="kopo.poly.dto.FeedDTO" %>
+<%
+    String id =(String)session.getAttribute("MarketId");
+    FeedDTO fDTO = (FeedDTO) request.getAttribute("fDTO");
+
+    if (fDTO == null) {
+        fDTO = new FeedDTO();
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +43,18 @@
 <body>
 <ul>
     <li><a href="/main">홈</a></li>
-    <li><a href="/notice">공지</a></li>
+    <li><a href="/feedList">공지</a></li>
     <li><a href="/reviewList">리뷰</a></li>
     <li><a href="/pic">사진</a></li>
+    <%if (id != null) { %>
+    <li><%=id%>님 환영합니다.</li>
+<li><a href="/user/myPage">마이페이지</a></li>
+    <li><a href="logout" onclick="confirmLogout();">로그아웃</a></li>
+    <%} else {%>
+    <li><a href="/user/loginPage">로그인하기</a></li>
+    <li><a href="/user/signUpPage">회원가입하기</a></li>
+    <%}%>
 </ul>
+
 </body>
 </html>

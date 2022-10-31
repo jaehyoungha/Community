@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IReviewRepository extends JpaRepository<ReviewEntity, Long> {
+public interface  IReviewRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewEntity> findAllByOrderByReviewSeqDesc();
 
 

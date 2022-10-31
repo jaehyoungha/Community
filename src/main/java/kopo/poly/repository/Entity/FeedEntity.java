@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Notice")
+@Table(name = "Feed")
 @DynamicUpdate
 @DynamicInsert
 @Builder
@@ -19,26 +19,25 @@ public class FeedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name =  "FEED_SEQ")
-    private Long noticeSeq;
+    private Long feedSeq;
 
-    @NonNull
-    @Column(name = "d",length = 500,nullable = false)
-    private String title;
+    @Column(name = "MARKET_ID",updatable = false)
+    private String marketId;
 
-    @NonNull
-    @Column(name = "contents",nullable = false)
-    private String contents;
+    @Column(name = "REG_ID", nullable = false)
+    private String regId;
 
-
-    @Column(name = "userId",updatable = false)
-    private String userId;
-
-    @Column(name = "readCnt",nullable = false)
-    private Long readCnt;
-
-    @Column(name = "regDt", nullable = false)
+    @Column(name = "REG_DT", nullable = false)
     private String regDt;
 
-    @Column(name = "chgDt")
+    @Column(name = "CHG_ID", nullable = false)
+    private String chgId;
+
+    @Column(name = "CHG_DT", nullable = false)
     private String chgDt;
+
+    @NonNull
+    @Column(name = "FEED_CONTENTS",nullable = false)
+    private String feedContents;
+
 }

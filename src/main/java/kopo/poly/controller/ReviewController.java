@@ -49,7 +49,7 @@ public class ReviewController {
         model.addAttribute("rList", rList);
 
         rList = null;
-        log.info(this.getClass().getName() + ".review end!");
+        log.info(this.getClass().getName() + ".reviewList end!");
 
         return "/review/reviewList";
     }
@@ -219,9 +219,10 @@ public class ReviewController {
         } catch (Exception e) {
             alt_title = "리뷰 작성";
             msg = "리뷰등록 실패";
-            alt_state = "fail";
+            alt_state = "error";
             url = "reviewReg";
 
+            log.info("[ERROR] : " +e);
         } finally {
             log.info(this.getClass().getName() + ".reviewInsert End!");
 

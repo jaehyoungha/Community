@@ -103,7 +103,7 @@ public class ReviewService implements IReviewService {
 
         log.info("noticeSeq : " + reviewSeq);
 
-        // 데이터 수정하기
+
         reviewRepository.deleteById(reviewSeq);
 
 
